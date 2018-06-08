@@ -16,7 +16,7 @@ class Artist < ApplicationRecord
 
   def better_tracks_query
 
-    # result = ActiveRecord::Base.connection.execute(<<-SQL)
+    # result = Artist.connection.execute(<<-SQL)
     #   SELECT
     #     albums.title, COUNT(*) AS tracks_count
     #   FROM
@@ -27,8 +27,11 @@ class Artist < ApplicationRecord
     #   GROUP BY
     #     albums.title
     # SQL
-    #
+    #since Artist inherits from ActiveRecord::Base, we can start a
+    #connection to the database and query it.
+
     # result.values # gives output in embedded array instead of hash
+
 
 
     result = albums = self

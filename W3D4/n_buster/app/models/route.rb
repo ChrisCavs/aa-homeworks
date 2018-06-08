@@ -21,5 +21,16 @@ class Route < ApplicationRecord
 
   def better_drivers_query
     # TODO: your code here
+    all_drivers = Hash.new { |h,k| h[k] = [] }
+
+    data = self
+      .buses
+      .select('buses.id, drivers.name')
+      .joins(:drivers)
+
+    data.each do |row|
+      all_drivers[row.id] += [row.name]
+    end
+    all_drivers
   end
 end
