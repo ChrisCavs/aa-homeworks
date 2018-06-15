@@ -1,0 +1,26 @@
+<div class="header-like">
+  <h1 class="title"><%= @album.title %></h1>
+
+  <form action="<%= likes_url %>" method="post">
+    <%= auth_token %>
+    <input type="hidden" name="album_id" value="<%= @album.id %>">
+    <input class="submit" type="submit" value="Like!">
+  </form>
+</div>
+
+<img class="album-image" src="<%=@album.url%>">
+<br>
+<ol>
+  <% @tracks.each do |track| %>
+    <li class="body">
+      <a class="image-wrap" href="<%=track_url(track)%>">
+        <%=track.title%>
+      </a>
+    </li>
+  <% end %>
+</ol>
+
+<% content_for :footer do %>
+  <%= link_to "Back to Albums", albums_url %>
+  <%= link_to "Homepage", user_url(current_user) %>
+<% end %>

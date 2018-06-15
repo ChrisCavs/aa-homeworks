@@ -1,0 +1,19 @@
+<h1 class="title center">All Albums</h1>
+
+<div class="container">
+  <% @albums.each do |album| %>
+
+    <div class="album-container">
+      <a class="image-wrap" href="<%=album_url(album)%>">
+        <img class="album-image" src="<%=album.url%>">
+      </a>
+      <p class="body">Title: <%=album.title%></p>
+      <p class="body">Band: <%=album.band.name%></p>
+      <p class="body">Released: <%=album.year%></p>
+    </div>
+  <% end %>
+</div>
+
+<% content_for :footer do %>
+  <%= link_to "Homepage", user_url(current_user) %>
+<% end %>

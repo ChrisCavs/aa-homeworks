@@ -1,0 +1,47 @@
+<h1 class="title center">
+  Hello again, <%= @user.name %>
+</h1>
+
+<% if @liked_albums.empty? %>
+
+  <h2 class="subtitle">Oh Noooooo...</h2>
+  <p class="body">It looks like you haven't liked any albums.</p>
+
+  <%= link_to "See all Albums", albums_path %>
+<% else %>
+
+  <div class="homepage-container">
+
+    <div class="homepage-albums-container">
+
+      <h2 class="subtitle">Liked Albums:</h2>
+      <div class="container">
+
+        <% @liked_albums.each_with_index do |album, idx| %>
+          <div class="album-container-ZZ">
+            <a class="image-wrap" href="<%=album_url(album)%>">
+              <img src="<%=album.url%>">
+            </a>
+            <p class="body"><%= album.title %></p>
+            <p class="small-body">
+              Liked on:  <%= @likes[idx].created_at.to_s.slice(0, 10) %>
+            </p>
+          </div>
+        <% end %>
+      </div>
+
+    </div>
+    <div class="bands-container">
+      <h2 class="subtitle">Your Top Bands</h2>
+      <ol>
+        <% @user.top_bands.each do |band| %>
+          <li><%=band.name%></li>
+        <% end %>
+      </ol>
+    </div>
+  </div>
+<% end %>
+
+<% content_for :footer do %>
+  <%= link_to "All Albums", albums_url %>
+<% end %>
