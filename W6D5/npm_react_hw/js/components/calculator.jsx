@@ -5,80 +5,91 @@ class Calculator extends React.Component {
     super(props)
 
     this.state = {
-      num1: "",
-      num2: "",
-      result: 0
+      num: "",
+      result: 0,
+      queue: []
     }
 
-    this.setNum1 = this.setNum1.bind(this)
-    this.setNum2 = this.setNum2.bind(this)
-
-    this.add = this.add.bind(this)
-    this.subtract = this.subtract.bind(this)
-    this.multiply = this.multiply.bind(this)
-    this.divide = this.divide.bind(this)
-
+    this.setNum = this.setNum.bind(this)
+    this.operation = this.operation.bind(this)
+    this.evaluate = this.evaluate.bind(this)
     this.clear = this.clear.bind(this)
   }
 
-  setNum1 (e) {
-    const num1 = e.target.value;
-    this.setState({ num1 })
+  setNum (e) {
+    const num = e.target.value;
+    this.setState({ num })
   }
 
-  setNum2 (e) {
-    const num2 = e.target.value;
-    this.setState({ num2 })
-  }
-
-  parse() {
-    return [parseInt(this.state.num1), parseInt(this.state.num2)]
-  }
-
-  add (e) {
+  operation (e, op) {
     e.preventDefault()
-    const result = this.parse().reduce((acc, x) => acc + x)
-    this.setState({ result })
+    if (e.target.value === '') return
+
+    const queue = this.state.queue.concat(
+      parseInt(e.target.value),
+      op
+    )
+
+    const num = ''
+    this.setState({ queue, num })
   }
 
-  subtract (e) {
-    e.preventDefault()
-    const result = this.parse().reduce((acc, x) => acc - x)
-    this.setState({ result })
-  }
+  evaluate () {
+    let queue = this.state.queue
+    let result = 0
 
-  multiply (e) {
-    e.preventDefault()
-    const result = this.parse().reduce((acc, x) => acc * x)
-    this.setState({ result })
-  }
-
-  divide (e) {
-    e.preventDefault()
-    const result = this.parse().reduce((acc, x) => acc / x)
-    this.setState({ result })
+    for (let i = 0; i < queue.length; i += 4) {
+      switch(queue[i+1]) {
+        case '+':
+          result += (queue[i] + queue[i+2])
+          break
+        case '-':
+          result += (queue[i] - queue[i + 2])
+          break
+        case '*':
+          result += (queue[i] * queue[i + 2])
+          break
+        case '/':
+          result += (queue[i] / queue[i + 2])
+          break
+      }
+    }
+    queue = []
+    this.setState({ queue, result })
   }
 
   clear (e) {
     e.preventDefault()
     this.setState({
-      num1: "",
-      num2: ""
+      num: "",
+      result: 0
     })
   }
 
   render() {
-    const { num1, num2 } = this.state
+    const { num } = this.state
     return (
       <div>
         <h1>{this.state.result}</h1>
-        <input type="text" onChange={this.setNum1} value={num1} />
-        <input type="text" onChange={this.setNum2} value={num2} />
+        <input type="text" onChange={this.setNum} value={num} />
 
-        <button onClick={this.add} >Add</button>
-        <button onClick={this.subtract} >Subtract</button>
-        <button onClick={this.multiply} >Multiply</button>
-        <button onClick={this.divide} >Divide</button>
+        <button onClick={(e) => {
+          this.operation(e, '+')
+        }} >+</button>
+
+        <button onClick={(e) => {
+          this.operation(e, '-')
+        }} >-</button>
+
+        <button onClick={(e) => {
+          this.operation(e, '*')
+        }} >*</button>
+
+        <button onClick={(e) => {
+          this.operation(e, '/')
+        }} >/</button>
+
+        <button onClick={this.evaluate}>=</button>
 
         <button onClick={this.clear} >Clear</button>
       </div>
